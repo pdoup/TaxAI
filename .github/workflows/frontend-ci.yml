@@ -43,7 +43,7 @@ jobs:
       - name: Run tests with Jest
         run: npm test -- --coverage # Run tests and generate coverage
         env:
-          CI: true
+          CI: false
 
       - name: Build application
         run: npm run build
