@@ -39,6 +39,8 @@ jobs:
 
       - name: Check formatting with Prettier
         run: npm run format:check
+        env:
+          CI: false
 
       - name: Run tests with Jest
         run: npm test -- --coverage # Run tests and generate coverage
