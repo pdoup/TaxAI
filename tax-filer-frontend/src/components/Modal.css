@@ -1,0 +1,134 @@
+/* tax-filer-frontend/src/components/Modal.css */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent overlay */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000; /* Ensure it's on top */
+}
+
+.modal-content {
+  background-color: #ffffff;
+  padding: 25px 30px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 650px; /* Max width of the modal */
+  max-height: 80vh; /* Max height */
+  overflow-y: auto; /* Allow scrolling for long content */
+  position: relative; /* For positioning the close button */
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 15px;
+  margin-bottom: 20px;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 1.6rem;
+  color: #e0007c; /* Magenta */
+}
+
+.modal-close-button {
+  background: none;
+  border: none;
+  font-size: 2.5rem;
+  font-weight: 300;
+  color: #aaa;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+  transition: color 0.2s ease;
+}
+
+.modal-close-button:hover {
+  color: #333;
+}
+
+.modal-body {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #343a40;
+}
+
+/* Basic Markdown styling (react-markdown will apply some defaults) */
+.modal-body h1,
+.modal-body h2,
+.modal-body h3 {
+  color: #e0007c;
+  margin-top: 1.2em;
+  margin-bottom: 0.6em;
+}
+.modal-body h1 {
+  font-size: 1.8em;
+}
+.modal-body h2 {
+  font-size: 1.5em;
+}
+.modal-body h3 {
+  font-size: 1.25em;
+}
+
+.modal-body p {
+  margin-bottom: 1em;
+}
+
+.modal-body ul,
+.modal-body ol {
+  margin-left: 20px;
+  margin-bottom: 1em;
+}
+
+.modal-body li {
+  margin-bottom: 0.5em;
+}
+
+.modal-body code {
+  background-color: #f0f0f0;
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+
+.modal-body pre {
+  background-color: #f0f0f0;
+  padding: 1em;
+  border-radius: 5px;
+  overflow-x: auto;
+}
+
+.modal-body blockquote {
+  border-left: 4px solid #e0007c;
+  padding-left: 1em;
+  margin-left: 0;
+  color: #555;
+  font-style: italic;
+}
+
+.modal-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1em;
+}
+
+.modal-body th,
+.modal-body td {
+  border: 1px solid #ddd;
+  padding: 0.5em;
+  text-align: left;
+}
+
+.modal-body th {
+  background-color: #f9f9f9;
+  font-weight: bold;
+}

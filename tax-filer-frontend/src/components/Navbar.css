@@ -1,0 +1,77 @@
+/* tax-filer-frontend/src/components/Navbar.css */
+.navbar {
+  background: linear-gradient(
+    180deg,
+    #f8b4e4 0%,
+    #e0007c 15%
+  ); /* Light magenta gradient */
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(255, 0, 250, 0.4);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  transition: background-color 0.3s ease;
+}
+
+.navbar-logo {
+  color: white; /* Keep logo text white for contrast */
+  text-decoration: none;
+  font-size: 1.8rem; /* Slightly larger for emphasis */
+  font-weight: bold;
+  font-family: 'Poppins', sans-serif;
+}
+
+.navbar-links {
+  list-style: none;
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar-links li {
+  margin-left: 25px;
+}
+
+.navbar-links a {
+  color: white;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 500;
+  transition:
+    color 0.3s ease,
+    transform 0.2s ease-out;
+  padding-bottom: 5px;
+  position: relative;
+}
+
+.navbar-links a::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 50%;
+  background-color: #ffffff;
+  transition:
+    width 0.3s ease,
+    left 0.3s ease;
+}
+
+.navbar-links a:hover::after,
+.navbar-links a.active::after {
+  width: 100%;
+  left: 0;
+}
+
+.navbar-links a:hover {
+  color: #f0f0f0;
+  transform: translateY(-2px);
+}
+
+.navbar-links a.active {
+  color: #ffffff; /* Ensure active link is clearly white */
+  font-weight: 700; /* Make active link bolder */
+}

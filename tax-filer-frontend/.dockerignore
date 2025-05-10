@@ -1,0 +1,44 @@
+# tax-filer-frontend/.dockerignore
+
+# Git
+.git
+.gitignore
+
+node_modules/
+
+build/
+dist/
+
+# Local environment files
+.env
+.env.local
+.env.*.local
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Test results / coverage reports
+coverage/
+jest-coverage/
+
+# IDE and OS specific
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# CI/CD specific
+.github/
+
+# Documentation
+# docs/
+# *.md
+
+# Prettier/ESLint cache
+.eslintcache
+.prettiercache

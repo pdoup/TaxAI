@@ -1,0 +1,35 @@
+.ai-advice-display {
+  margin-top: 25px;
+  padding: 20px;
+  background-color: #f8f9fa; /* Light background for the advice section */
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+}
+
+.ai-advice-display h3 {
+  color: #17a2b8; /* Info color for heading */
+  margin-top: 0;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.ai-advice-display .advice-content {
+  background-color: #ffffff;
+  padding: 15px;
+  border-radius: 4px;
+  border: 1px solid #e9ecef;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.ai-advice-display .disclaimer {
+  margin-top: 15px;
+  font-size: 0.85rem;
+  color: #6c757d; /* Muted color for disclaimer */
+  text-align: center;
+}

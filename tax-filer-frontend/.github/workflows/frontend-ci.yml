@@ -1,0 +1,62 @@
+name: Frontend CI
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'tax-filer-frontend/**'
+      - '.github/workflows/frontend-ci.yml'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'tax-filer-frontend/**'
+      - '.github/workflows/frontend-ci.yml'
+
+jobs:
+  lint-test-build:
+    name: Lint, Test & Build Frontend
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./tax-filer-frontend # Set working directory
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm' # Cache npm dependencies
+          cache-dependency-path: tax-filer-frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint with ESLint
+        run: npm run lint
+
+      - name: Check formatting with Prettier
+        run: npm run format:check
+
+      - name: Run tests with Jest
+        run: npm test -- --coverage # Run tests and generate coverage
+        env:
+          CI: true
+
+      - name: Build application
+        run: npm run build
+        env:
+          REACT_APP_API_BASE_URL: ${{ vars.REACT_APP_API_BASE_URL_CI || 'http://localhost:8000/api/v1' }}
+          # Use GitHub variables (vars) for non-sensitive build-time configs.
+          # In production, this URL should point to the deployed backend, fine for now.
+
+      # Archive production artifacts
+      - name: Archive production build
+        if: success() && github.event_name == 'push' # Archive only on successful push
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-build
+          path: tax-filer-frontend/build
+          if-no-files-found: error # Fail if build directory is not found

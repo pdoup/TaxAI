@@ -1,0 +1,96 @@
+/* tax-filer-frontend/src/components/TaxForm.css */
+.tax-form-container {
+  max-width: 700px;
+  margin: 40px auto;
+  padding: 30px 40px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.tax-form-container h2 {
+  text-align: center;
+  color: #e0007c; /* Magenta */
+  margin-bottom: 30px;
+  font-size: 2rem;
+}
+
+.form-group {
+  margin-bottom: 25px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: #343a40;
+}
+
+.error-message {
+  color: #d32f2f; /* Material Design error red */
+  background-color: #ffebee;
+  border: 1px solid #d32f2f;
+  padding: 10px;
+  border-radius: 8px;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.ai-advice-section {
+  margin-top: 30px;
+  padding: 20px;
+  background-color: #fdf0f7; /* Very light magenta tone */
+  border-radius: 8px;
+  border: 1px solid #f7c5e0;
+}
+
+.ai-advice-section h3 {
+  color: #e0007c; /* Magenta */
+  margin-bottom: 15px;
+}
+
+.tax-form-container button[type='submit'] {
+  background-color: #e0007c;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+  transition:
+    background-color 0.3s ease,
+    transform 0.1s ease;
+  display: flex; /* To align text and spinner */
+  align-items: center;
+  justify-content: center;
+  gap: 10px; /* Space between text and spinner */
+  min-height: 48px; /* Ensure consistent height */
+}
+
+.tax-form-container button[type='submit']:hover:not(:disabled) {
+  background-color: #c0006a;
+  transform: translateY(-1px);
+}
+
+.tax-form-container button[type='submit']:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Spinner Styles */
+.spinner {
+  border: 4px solid rgba(255, 255, 255, 0.3); /* Light border */
+  border-left-color: #ffffff; /* White spinner color */
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

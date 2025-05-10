@@ -1,0 +1,7 @@
+# tax-filer-frontend/.prettierignore
+build
+dist
+node_modules
+coverage
+public
+*.lock
