@@ -12,10 +12,12 @@ const apiClient = axios.create({
 });
 
 export const submitTaxDataForAdvice = async (taxData) => {
+  let response;
   try {
-    const response = await apiClient.post('/tax/submit-advice', taxData);
+    response = await apiClient.post('/tax/submit-advice', taxData);
     return response.data;
   } catch (error) {
+    response = null;
     throw error;
   }
 };
