@@ -11,6 +11,7 @@ module.exports = {
     'plugin:react/recommended', // React-specific linting rules
     'plugin:react-hooks/recommended', // Rules for React Hooks
     'plugin:jsx-a11y/recommended', // Accessibility rules for JSX
+    'plugin:prettier/recommended',
   ],
   parserOptions: {
     ecmaFeatures: {
@@ -19,23 +20,18 @@ module.exports = {
     ecmaVersion: 'latest',
     sourceType: 'module',
   },
-  plugins: [
-    'react',
-    'react-hooks',
-    'jsx-a11y',
-  ],
+  plugins: ['react', 'react-hooks', 'jsx-a11y', 'prettier'],
   rules: {
     // React specific rules
     'react/prop-types': 'off',
     'react/react-in-jsx-scope': 'off',
-
+    quotes: ['off', 'single', { avoidEscape: false }], // Enforce single quotes
+    'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off', // Allow console in dev, warn in prod
     // General rules
     'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }], // Warn about unused variables
-    'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off', // Allow console in dev, warn in prod
-    'indent': ['warn', 2, { SwitchCase: 1 }], // Enforce 2-space indentation
-    'quotes': ['warn', 'single'], // Enforce single quotes
-    'semi': ['warn', 'always'], // Require semicolons
-
+    indent: ['warn', 2, { SwitchCase: 1 }], // Enforce 2-space indentation
+    semi: ['warn', 'always'], // Require semicolons
+    'prettier/prettier': ['warn', {}, { usePrettierrc: true }],
     // React Hooks rules
     'react-hooks/rules-of-hooks': 'error', // Checks rules of Hooks
     'react-hooks/exhaustive-deps': 'warn', // Checks effect dependencies
