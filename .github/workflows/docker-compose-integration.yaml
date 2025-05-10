@@ -50,7 +50,7 @@ jobs:
 
           # --- Health Checks ---
           echo "Pinging backend..."
-          curl --fail --retry 5 --retry-delay 5 http://localhost:8000/health || (echo "Backend health check failed!" && exit 1)
+          curl --fail --retry 5 --retry-delay 5 http://localhost:8000/v1/api/tax/health || (echo "Backend health check failed!" && exit 1)
           echo "Backend responded successfully."
 
           echo "Pinging frontend..."
