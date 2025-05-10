@@ -1,0 +1,51 @@
+# tax-filer-backend/.dockerignore
+
+# Git
+.git
+.gitignore
+
+# Python virtual environment
+.venv
+venv/
+env/
+ENV/
+*/site-packages/
+
+# Python bytecode and cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.coverage
+coverage.xml
+
+# IDE and OS specific
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Local environment files
+.env
+*.env.*local
+
+# Test files
+# tests/
+# app/tests/
+
+# CI/CD specific
+.github/
+
+# Documentation
+docs/
+*.md
+
+# Temporary files / build artifacts
+dist/
+build/
+*.egg-info/

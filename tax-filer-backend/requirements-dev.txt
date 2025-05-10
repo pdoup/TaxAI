@@ -1,0 +1,11 @@
+# For linting & formatting
+flake8
+black
+isort
+
+# For testing
+pytest
+pytest-cov
+pytest-mock
+httpx
+pytest-asyncio # For testing async FastAPI code
