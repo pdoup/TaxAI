@@ -1,0 +1,71 @@
+name: Docker Compose Integration
+
+on:
+  workflow_run:
+    workflows: ["Backend CI", "Frontend CI"]
+    types:
+      - completed
+
+jobs:
+  integrate_and_test_compose:
+    name: Integrate and Test with Docker Compose
+    if: github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Create .env file for Docker Compose
+        run: |
+          echo "Creating .env file for Docker Compose..."
+          echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY_TEST }}" > .env
+          echo "OPENAI_MODEL_NAME=${{ vars.OPENAI_MODEL_NAME || 'gpt-4-turbo' }}" >> .env
+        env:
+          # OPENAI_API_KEY is a secret
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY_TEST }}
+          OPENAI_MODEL_NAME: ${{ vars.OPENAI_MODEL_NAME }}
+
+      - name: Build services with Docker Compose
+        run: docker compose build --no-cache
+
+      - name: Start services with Docker Compose
+        run: docker compose up --detach --yes
+
+      - name: Wait for services to be healthy
+        run: |
+          echo "Waiting for services to start..."
+          sleep 15
+
+          echo "Checking running containers:"
+          docker compose ps
+
+          # --- Health Checks ---
+          echo "Pinging backend..."
+          curl --fail --retry 5 --retry-delay 5 http://localhost:8000/api/v1/docs || (echo "Backend health check failed!" && exit 1)
+          echo "Backend responded successfully."
+
+          echo "Pinging frontend..."
+          curl --fail --retry 5 --retry-delay 5 http://localhost:3000 || (echo "Frontend health check failed!" && exit 1)
+          echo "Frontend responded successfully."
+          # --- End Health Checks ---
+
+          echo "All services seem to be up and responsive."
+
+      - name: Display Docker Compose logs (runs on success or failure of previous steps)
+        if: always()
+        run: |
+          echo "Displaying logs from Docker Compose services..."
+          docker compose logs --tail="all"
+
+      - name: Stop and remove Docker Compose services (runs on success or failure)
+        if: always()
+        run: |
+          echo "Stopping and removing Docker Compose services..."
+          docker compose down -v --remove-orphans -t 60
