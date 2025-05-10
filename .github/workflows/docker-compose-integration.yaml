@@ -29,7 +29,7 @@ jobs:
           echo "OPENAI_MODEL_NAME=${{ vars.OPENAI_MODEL_NAME || 'gpt-4-turbo' }}" >> tax-filer-backend/.env
         env:
           # OPENAI_API_KEY is a secret
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY_TEST }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY_TESTING }}
           OPENAI_MODEL_NAME: ${{ vars.OPENAI_MODEL_NAME }}
 
       - name: Build services with Docker Compose
