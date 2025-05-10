@@ -16,8 +16,6 @@ export const submitTaxDataForAdvice = async (taxData) => {
     const response = await apiClient.post('/tax/submit-advice', taxData);
     return response.data;
   } catch (error) {
-    console.error('API Error:', error.response || error.message);
-    // Re-throw to be handled by the component
     throw error;
   }
 };

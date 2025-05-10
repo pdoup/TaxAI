@@ -54,7 +54,6 @@ const TaxForm = () => {
         setError(response.error || 'Failed to get advice. Please try again.');
       }
     } catch (err) {
-      console.error('Submission error:', err);
       let errorMessage =
         'An unexpected error occurred. Please try again later.';
       if (err.response && err.response.data && err.response.data.detail) {
