@@ -1,0 +1,48 @@
+
+services:
+  backend:
+    build:
+      context: ./tax-filer-backend
+      dockerfile: Dockerfile
+    container_name: tax_app_backend
+    env_file:
+       - ./tax-filer-backend/.env
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./tax-filer-backend/app:/app/app # Mount local app directory to container app directory
+    restart: unless-stopped
+    networks:
+      - tax_app_network
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+
+  frontend:
+    build:
+      context: ./tax-filer-frontend
+      dockerfile: Dockerfile
+      args:
+        # This passes the URL to the frontend build process if your Dockerfile uses it.
+        # The Nginx server inside the container will serve static files.
+        # The React app, once loaded in the browser, makes requests to this URL.
+        REACT_APP_API_BASE_URL: http://localhost:8000/api/v1 # For access from browser
+    container_name: tax_app_frontend
+    ports:
+      - "3000:80" # Map host port 3000 to Nginx container port 80
+    depends_on:
+        backend:
+            condition: service_started
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    networks:
+      - tax_app_network
+
+networks:
+  tax_app_network:
+    driver: bridge
+    name: tax_app_custom_network
