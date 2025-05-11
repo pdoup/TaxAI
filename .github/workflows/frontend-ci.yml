@@ -6,6 +6,8 @@ on:
     paths:
       - 'tax-filer-frontend/**'
       - '.github/workflows/frontend-ci.yml'
+    paths-ignore:
+      - 'README.md'
   pull_request:
     branches: [ main, develop ]
     paths:

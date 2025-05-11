@@ -6,6 +6,8 @@ on:
     paths: # Only run if backend files change
       - 'tax-filer-backend/**'
       - '.github/workflows/backend-ci.yml'
+    paths-ignore:
+      - 'README.md'
   pull_request:
     branches: [ main, develop ]
     paths:
