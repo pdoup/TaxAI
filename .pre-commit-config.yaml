@@ -1,0 +1,14 @@
+repos:
+  - repo: https://github.com/psf/black
+    rev: 25.1.0
+    hooks:
+      - id: black
+        language_version: python3
+        files: ^tax-filer-backend
+ 
+  - repo: https://github.com/pycqa/flake8
+    rev: 7.2.0
+    hooks:
+      - id: flake8
+        files: ^tax-filer-backend/
+        args: ["--config=tax-filer-backend/.flake8"]

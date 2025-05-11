@@ -10,13 +10,6 @@ from contextlib import asynccontextmanager
 if settings.LOG_LEVEL:
     app_logger.setLevel(settings.LOG_LEVEL.upper())
 
-app = FastAPI(
-    title=settings.PROJECT_NAME,
-    openapi_url=f"{settings.API_V1_STR}/openapi.json",
-    version="0.2.0",
-    description="API for the Intelligent Tax Filing Web Application, providing AI-driven tax advice.",
-)
-
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -24,6 +17,15 @@ async def lifespan(app: FastAPI):
     app_logger.info(f"Project Name: {settings.PROJECT_NAME}")
     yield
     app_logger.info("Application shutdown: FastAPI server is stopping.")
+
+
+app = FastAPI(
+    title=settings.PROJECT_NAME,
+    openapi_url=f"{settings.API_V1_STR}/openapi.json",
+    version="0.2.0",
+    description="API for the Intelligent Tax Filing Web Application, providing AI-driven tax advice.",
+    lifespan=lifespan,
+)
 
 
 @app.exception_handler(Exception)  # Generic exception handler
