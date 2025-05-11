@@ -5,7 +5,7 @@
 **Last Updated:** 11/05/25
 ## Table of Contents
 
-1.  [Project Overview](#project-overview)
+1.  [Project Overview](#1. project-overview)
 2.  [Features](#features)
 3.  [Technical Stack](#technical-stack)
 4.  [Architecture Overview](#architecture-overview)
