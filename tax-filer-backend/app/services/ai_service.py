@@ -52,19 +52,19 @@ async def get_tax_advice_from_ai(tax_data: TaxInfoInput) -> str:
             model=settings.OPENAI_MODEL_NAME,
             messages=[
                 {
-                    "role": "system",
+                    "role": "developer",
                     "content": "You are an AI assistant providing general tax information.",
                 },
-                {"role": "user", "content": prompt},
+                {"role": "user", "content": prompt, "name": "customer"},
             ],
-            max_tokens=350,
+            max_completion_tokens=350,
             temperature=0.6,
             n=1,
             stop=None,
         )
         advice = completion.choices[0].message.content.strip()
         app_logger.info(
-            f"Successfully received advice from OpenAI. Length: {len(advice)} chars."
+            f"Successfully received advice from OpenAI with id={completion.id} ({completion.usage.completion_tokens} tokens)"
         )
         return advice
     except APIConnectionError as e:
