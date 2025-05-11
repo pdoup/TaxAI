@@ -1,0 +1,68 @@
+/* tax-filer-frontend/src/components/NotFoundPage.css */
+.not-found-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 150px);
+  text-align: center;
+  padding: 20px;
+  background: linear-gradient(135deg, #fdf0f7 0%, #ead6ee 100%);
+  color: #343a40;
+}
+
+.not-found-content {
+  background-color: #ffffff;
+  padding: 40px 50px;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+}
+
+.not-found-icon {
+  color: #e0007c; /* Magenta accent */
+  margin-bottom: 20px;
+}
+
+.not-found-title {
+  font-size: 6rem; /* Large 404 text */
+  font-weight: 700;
+  color: #e0007c; /* Magenta */
+  margin: 0;
+  line-height: 1;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.not-found-subtitle {
+  font-size: 2rem;
+  font-weight: 500;
+  color: #333;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.not-found-message {
+  font-size: 1.1rem;
+  color: #555;
+  margin-bottom: 30px;
+  line-height: 1.6;
+}
+
+.not-found-button {
+  display: inline-block;
+  background-color: #e0007c; /* Magenta */
+  color: white;
+  padding: 12px 25px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 500;
+  transition:
+    background-color 0.3s ease,
+    transform 0.2s ease;
+}
+
+.not-found-button:hover {
+  background-color: #c7006e; /* Darker magenta */
+  transform: translateY(-2px);
+}
