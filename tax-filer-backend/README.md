@@ -96,7 +96,7 @@ ReDoc documentation is available at `/redoc`.
 more fine grained control over the entire lifecycle of a single request and help with error debugging.
 * A middleware intercepts each request and injects a unique request header `X-Request-ID` (if not already present).
 * This ID is also added to the response headers, so other clients and services can trace it.
-* These logs then can be stored in their raw format in a centralized storage like a data lake and ingested at scale
+* These logs then can be stored in their raw format in a centralized storage like a data lake and later consumed
   for futher processing.
 
 ## AI Integration Details
