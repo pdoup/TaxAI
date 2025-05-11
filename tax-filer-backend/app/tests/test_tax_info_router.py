@@ -32,7 +32,7 @@ async def test_get_application_info(async_client: AsyncClient):
 
     response_data = response.json()
 
-    # Assert against the values imported from your app.config.settings
+    # Assert against the values imported your app.config.settings
     assert response_data["project_name"] == settings.PROJECT_NAME
     assert response_data["version"] == settings.VERSION
     assert response_data["description"] == settings.DESCRIPTION
