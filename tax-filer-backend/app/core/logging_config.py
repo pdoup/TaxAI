@@ -2,6 +2,7 @@
 import logging
 import logging.handlers
 from pathlib import Path
+from app.middleware.request_id_middleware import get_request_id
 
 # Define the log directory relative to the backend app's root
 LOG_DIR = Path(__file__).resolve().parent.parent.parent / "logs"
@@ -20,11 +21,11 @@ class CustomFormatter(logging.Formatter):
     reset = "\x1b[0m"
 
     FORMATS_FILE = {
-        logging.DEBUG: "[%(asctime)s] [%(levelname)s] [%(name)s:%(lineno)d] %(message)s",
-        logging.INFO: "[%(asctime)s] [INFO] [%(name)s] %(message)s",
-        logging.WARNING: "[%(asctime)s] [WARNING] [%(name)s:%(lineno)d] %(message)s",
-        logging.ERROR: "[%(asctime)s] [ERROR] [%(name)s:%(lineno)d] %(message)s (%(exc_info)s)",
-        logging.CRITICAL: "[%(asctime)s] [CRITICAL] [%(name)s:%(lineno)d] %(message)s (%(exc_info)s)",
+        logging.DEBUG: "[%(asctime)s] [%(levelname)s] [RID:%(request_id)s] [%(module)s.%(funcName)s:%(lineno)d] %(message)s",
+        logging.INFO: "[%(asctime)s] [%(levelname)s] [RID:%(request_id)s] [%(name)s] %(message)s",
+        logging.WARNING: "[%(asctime)s] [%(levelname)s] [RID:%(request_id)s] [%(name)s:%(lineno)d] %(message)s",
+        logging.ERROR: "[%(asctime)s] [%(levelname)s] [RID:%(request_id)s] [%(name)s:%(lineno)d] %(message)s (%(exc_info)s)",
+        logging.CRITICAL: "[%(asctime)s] [%(levelname)s] [RID:%(request_id)s] [%(name)s:%(lineno)d] %(message)s (%(exc_info)s)",
     }
 
     def __init__(
@@ -34,6 +35,8 @@ class CustomFormatter(logging.Formatter):
         super().__init__(datefmt=datefmt)
 
     def format(self, record):
+        request_id = get_request_id()  # Get request_id from ContextVar
+        record.request_id = request_id if request_id else "N/A"
         log_fmt = self.FORMATS_FILE.get(record.levelno)
         formatter = logging.Formatter(log_fmt, datefmt=self.datefmt)
         return formatter.format(record)

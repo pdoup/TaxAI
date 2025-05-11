@@ -16,6 +16,10 @@ else:  # Fallback if script is run from a different context or for Pydantic to f
 
 class Settings(BaseSettings):
     PROJECT_NAME: str = "Intelligent Tax Filing API"
+    VERSION: str = "0.1.0"
+    DESCRIPTION: str = (
+        "API for the Intelligent Tax Filing Web Application, providing AI-driven tax advice."
+    )
     API_V1_STR: str = "/api/v1"
     OPENAI_API_KEY: str
     LOG_LEVEL: str = "INFO"

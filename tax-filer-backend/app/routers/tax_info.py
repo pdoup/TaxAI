@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, Body
-from app.models import TaxInfoInput, TaxAdviceResponse
+from app.models import TaxInfoInput, TaxAdviceResponse, AppInfo
 from app.services.ai_service import get_tax_advice_from_ai
 from app.core.config import Settings, settings as app_settings
 from app.core.logging_config import app_logger
@@ -68,6 +68,21 @@ async def submit_tax_info_and_get_advice(
         raise HTTPException(
             status_code=500, detail=f"An internal server error occurred: {str(e)}"
         )
+
+
+@router.get(
+    "/info", response_model=AppInfo, summary="Get Instance Info", tags=["System"]
+)
+async def get_app_info():
+    app_logger.info("Fetching application info.")
+    return AppInfo(
+        project_name=app_settings.PROJECT_NAME,
+        version=app_settings.VERSION,
+        description=app_settings.DESCRIPTION,
+        default_openai_model=app_settings.DEFAULT_OPENAI_MODEL,
+        configured_openai_model=app_settings.OPENAI_MODEL_NAME,
+        api=app_settings.API_V1_STR,
+    )
 
 
 @router.get("/health", summary="Health Check")

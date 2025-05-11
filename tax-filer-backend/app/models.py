@@ -16,3 +16,12 @@ class TaxAdviceResponse(BaseModel):
     message: str
     advice: Optional[str] = None
     raw_input: Optional[TaxInfoInput] = None  # For debugging
+
+
+class AppInfo(BaseModel):
+    project_name: str
+    version: str
+    description: str
+    default_openai_model: str
+    configured_openai_model: str
+    api: str

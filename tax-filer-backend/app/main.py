@@ -5,6 +5,7 @@ from fastapi.exceptions import RequestValidationError
 from app.routers import tax_info
 from app.core.config import settings
 from app.core.logging_config import app_logger
+from app.middleware.request_id_middleware import RequestIDMiddleware
 from contextlib import asynccontextmanager
 
 if settings.LOG_LEVEL:
@@ -22,8 +23,8 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title=settings.PROJECT_NAME,
     openapi_url=f"{settings.API_V1_STR}/openapi.json",
-    version="0.2.0",
-    description="API for the Intelligent Tax Filing Web Application, providing AI-driven tax advice.",
+    version=settings.VERSION,
+    description=settings.DESCRIPTION,
     lifespan=lifespan,
 )
 
@@ -59,12 +60,13 @@ origins = [
     # "https://some-frontend-domain.com", # For production
 ]
 
+app.add_middleware(RequestIDMiddleware)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allow_headers=["content-type", "authorization"],
+    allow_headers=["content-type", "authorization", "X-Request-ID"],
 )
 
 # Include routers

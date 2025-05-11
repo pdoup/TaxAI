@@ -40,11 +40,11 @@
   text-decoration: none;
   font-size: 1rem;
   font-weight: 500;
-  transition:
-    color 0.3s ease,
-    transform 0.2s ease-out;
-  padding-bottom: 5px;
   position: relative;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: color 0.3s ease, background-color 0.3s ease, transform 0.2s ease-out;
+  outline: none;
 }
 
 .navbar-links a::after {
@@ -68,10 +68,21 @@
 
 .navbar-links a:hover {
   color: #f0f0f0;
+  background-color: rgba(255, 255, 255, 0.1); /* Slight highlight on hover */
   transform: translateY(-2px);
 }
 
+.navbar-links a:focus,
+.navbar-links a:active {
+  background-color: #ADD8E6;
+  color: #2c3e50;
+  border-radius: 6px;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(173, 216, 230, 0.7);
+}
+
 .navbar-links a.active {
-  color: #ffffff; /* Ensure active link is clearly white */
-  font-weight: 700; /* Make active link bolder */
+  color: #ffffff;
+  font-weight: 700;
+  background-color: rgba(255, 255, 255, 0.15);
 }
