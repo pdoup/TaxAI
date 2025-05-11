@@ -43,7 +43,19 @@ The base URL for the API is `/api/v1`.
           "message": "Backend is running!"
         }
         ```
-
+-   **`GET /tax/info`**
+    -   **Description**: Expose non-sensitive configuration details, potentially useful for debugging or for a frontend admin panel.
+    -   **Response Body**:
+        ```json
+        {
+            "project_name": "Intelligent Tax Filing API",
+            "version": "0.1.0",
+            "description": "API for the Intelligent Tax Filing Web Application, providing AI-driven tax advice.",
+            "default_openai_model": "gpt-4-turbo",
+            "configured_openai_model": "gpt-4-turbo",
+            "api": "/api/v1"
+        }
+        ```
 ### API Documentation
 
 Interactive API documentation (Swagger UI) is available at `/docs` when the application is running.
@@ -76,6 +88,16 @@ ReDoc documentation is available at `/redoc`.
     uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
     ```
     The backend will be accessible at `http://localhost:8000`.
+
+
+### Request Handling
+
+* Each request is associated with a unique identifier (UUID) which is logged to a file, enabling the admininstrator
+more fine grained control over the entire lifecycle of a single request and help with error debugging.
+* A middleware intercepts each request and injects a unique request header `X-Request-ID` (if not already present).
+* This ID is also added to the response headers, so other clients and services can trace it.
+* These logs then can be stored in their raw format in a centralized storage like a data lake and ingested at scale
+  for futher processing.
 
 ## AI Integration Details
 

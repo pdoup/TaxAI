@@ -85,6 +85,8 @@ The Intelligent Tax Filing Web Application is a full-stack solution designed to 
             * Response (Error): `{ "detail": str or List[ErrorDetail] }`
         * `GET /api/v1/tax/health` (Simple health check endpoint):
             * Response: `{ "status": "healthy", "message": "Backend is running!" }`
+        * `GET /api/v1/tax/info` (Get non-sensitive configuration info in JSON format):
+            * Response: `{ "project_name": "Intelligent Tax Filing API", "version": "0.1.0", ...}`
 
 * **Containerization & DevOps (CI/CD):**
     * Containerization: Docker, Docker Compose - Separate Dockerfiles for frontend (multi-stage Nginx build) and backend with `.dockerignore` files optimized for build context.
