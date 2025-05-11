@@ -1,9 +1,7 @@
 import pytest
 from fastapi import status
 from app.main import app  # Main FastAPI application instance
-
-# Later stage if OPENAI_API_KEY is truly needed and not mocked for a test:
-# from app.core.config import settings
+from app.core.config import settings
 from httpx import AsyncClient, ASGITransport
 import pytest_asyncio
 
@@ -20,6 +18,30 @@ async def test_health_check(async_client: AsyncClient):
     response = await async_client.get("/api/v1/tax/health")
     assert response.status_code == status.HTTP_200_OK
     assert response.json() == {"status": "healthy", "message": "Backend is running!"}
+
+
+@pytest.mark.asyncio
+async def test_get_application_info(async_client: AsyncClient):
+    """
+    Test the /api/v1/tax/info endpoint to ensure it returns correct
+    application configuration details.
+    """
+    response = await async_client.get("/api/v1/tax/info")
+
+    assert response.status_code == status.HTTP_200_OK
+
+    response_data = response.json()
+
+    # Assert against the values imported from your app.config.settings
+    assert response_data["project_name"] == settings.PROJECT_NAME
+    assert response_data["version"] == settings.VERSION
+    assert response_data["description"] == settings.DESCRIPTION
+    assert response_data["default_openai_model"] == settings.DEFAULT_OPENAI_MODEL
+    assert response_data["configured_openai_model"] == settings.OPENAI_MODEL_NAME
+    assert response_data["api"] == settings.API_V1_STR
+
+    # Ensure no sensitive data is exposed (e.g., API keys)
+    assert "OPENAI_API_KEY" not in response_data
 
 
 @pytest.mark.asyncio
