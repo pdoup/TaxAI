@@ -3,7 +3,7 @@ from fastapi import APIRouter, Body, HTTPException
 from app.core.config import Settings
 from app.core.config import settings as app_settings
 from app.core.logging_config import app_logger
-from app.models import AppInfo, TaxAdviceResponse, TaxInfoInput
+from app.models import AIServiceResponse, AppInfo, TaxAdviceResponse, TaxInfoInput
 from app.services.ai_service import get_tax_advice_from_ai
 
 router = APIRouter()
@@ -32,34 +32,30 @@ async def submit_tax_info_and_get_advice(
     """
     # Pydantic performs initial validation based on model definitions.
     app_logger.info(
-        f"Received tax info submission for country: {tax_input.country}, income: {tax_input.income}"
+        f"Received tax info submission for country: {tax_input.country} - income: {tax_input.income}"
     )
     try:
-        ai_advice = await get_tax_advice_from_ai(tax_input)
+        ai_advice: AIServiceResponse = await get_tax_advice_from_ai(tax_input)
 
-        if (
-            "Could not retrieve AI-powered advice" in ai_advice
-            or "An unexpected error occurred" in ai_advice
-        ):
-            # This indicates an error from the AI service itself.
-            # We might want to return a different HTTP status code or a more structured error.
-            # For now, we pass the error message through the 'advice' field.
+        if ai_advice.success:
+            app_logger.info(
+                f"Successfully generated AI advice for country: {tax_input.country}"
+            )
+            return TaxAdviceResponse(
+                message="Tax information processed and AI advice retrieved successfully.",
+                advice=ai_advice.content,
+                raw_input=tax_input,
+            )
+        else:
             app_logger.warning(
-                f"AI service returned an error for input: {tax_input.model_dump()}. Advice: {ai_advice}"
+                f"AI service returned an error for input: {tax_input.model_dump()} (Error: {ai_advice.error_type})"
             )
             return TaxAdviceResponse(
                 message="Processed tax information, but encountered an issue getting AI advice.",
-                advice=ai_advice,
+                advice=ai_advice.content,
                 raw_input=tax_input,
             )
-        app_logger.info(
-            f"Successfully generated AI advice for country: {tax_input.country}"
-        )
-        return TaxAdviceResponse(
-            message="Tax information processed and AI advice retrieved successfully.",
-            advice=ai_advice,
-            raw_input=tax_input,
-        )
+
     except HTTPException:  # Re-raise HTTPExceptions
         raise
     except Exception as e:

@@ -9,7 +9,7 @@ from openai import (
 
 from app.core.config import settings
 from app.core.logging_config import app_logger
-from app.models import TaxInfoInput
+from app.models import AIServiceError, AIServiceResponse, TaxInfoInput
 
 # Ensure OpenAI client is initialized safely
 try:
@@ -23,7 +23,7 @@ except Exception as e:
     client = None  # Ensure client is None if initialization fails
 
 
-async def get_tax_advice_from_ai(tax_data: TaxInfoInput) -> str:
+async def get_tax_advice_from_ai(tax_data: TaxInfoInput) -> AIServiceResponse:
     """
     Sends user tax input to OpenAI (GPT model) and retrieves tax advice.
     """
@@ -44,7 +44,11 @@ async def get_tax_advice_from_ai(tax_data: TaxInfoInput) -> str:
     """
     if not client:
         app_logger.error("OpenAI client not initialized. Cannot fetch AI advice.")
-        return "AI service is currently unavailable due to a configuration error."
+        return AIServiceResponse(
+            success=False,
+            content=r"AI service is not available due to a configuration error. Please contact support.",
+            error_type=AIServiceError.CONFIG_ERROR,
+        )
     try:
         app_logger.info(
             f"Sending request to OpenAI for tax advice. Country: {tax_data.country}, Income: {tax_data.income}"
@@ -67,33 +71,55 @@ async def get_tax_advice_from_ai(tax_data: TaxInfoInput) -> str:
         app_logger.info(
             f"Successfully received advice from OpenAI with id={completion.id} ({completion.usage.completion_tokens} tokens)"
         )
-        return advice
+        return AIServiceResponse(success=True, content=advice)
     except APIConnectionError as e:
         app_logger.error(f"OpenAI API Connection Error: {e}", exc_info=True)
-        return "Could not retrieve AI-powered advice at this moment due to a network issue reaching OpenAI."
+        err_msg = "Could not retrieve AI-powered advice at this moment due to a network issue reaching OpenAI."
+        return AIServiceResponse(
+            success=False, content=err_msg, error_type=AIServiceError.API_CONN_ERROR
+        )
     except RateLimitError as e:
         app_logger.error(f"OpenAI API Rate Limit Exceeded: {e}", exc_info=True)
-        return "AI service is temporarily unavailable due to high demand (rate limit). Please try again later."
+        err_msg = "AI service is temporarily unavailable due to high demand (rate limit). Please try again later."
+        return AIServiceResponse(
+            success=False, content=err_msg, error_type=AIServiceError.API_LIMIT_EXCEEDED
+        )
     except NotFoundError as e:
         app_logger.error(
             f"OpenAI API error while getting tax advice '{e.code}'. Message: {e.body['message']} (RequestID: {e.request_id})"
         )
-        return (
+        err_msg = (
             "Could not retrieve AI-powered advice at this moment due to internal issue"
+        )
+        return AIServiceResponse(
+            success=False, content=err_msg, error_type=AIServiceError.INVALID_MODEL
         )
     except APIStatusError as e:  # Catch other API errors
         app_logger.error(
             f"OpenAI API Status Error (status {e.status_code}): {e.response}",
             exc_info=True,
         )
-        return f"Could not retrieve AI-powered advice at this moment due to an API error: {e.status_code}."
+        err_msg = (
+            r"Could not retrieve AI-powered advice at this moment due to an API error"
+        )
+        return AIServiceResponse(
+            success=False, content=err_msg, error_type=AIServiceError.API_ERROR
+        )
     except OpenAIError as e:
         app_logger.error(
             f"OpenAI API Error (status {e.status_code}): {e.response}", exc_info=True
         )
-        return f"Could not retrieve AI-powered advice at this moment due to an OpenAI error: {e.status_code}."
+        err_msg = r"Could not retrieve AI-powered advice at this moment due to an OpenAI error"
+        return AIServiceResponse(
+            success=False, content=err_msg, error_type=AIServiceError.OAI_ERROR
+        )
     except Exception as e:
         app_logger.error(
             f"Unexpected error when calling OpenAI API: {e}", exc_info=True
         )
-        return "An unexpected error occurred while trying to get AI-powered tax advice."
+        err_msg = (
+            "An unexpected error occurred while trying to get AI-powered tax advice."
+        )
+        return AIServiceResponse(
+            success=False, content=err_msg, error_type=AIServiceError.INTERNAL_ERR
+        )
