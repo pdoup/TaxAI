@@ -12,3 +12,21 @@ repos:
       - id: flake8
         files: ^tax-filer-backend/
         args: ["--config=tax-filer-backend/.flake8"]
+
+  - repo: local
+    hooks:
+      - id: frontend-lint
+        name: Lint frontend JS/TS with ESLint
+        entry: bash -c 'cd tax-filer-frontend && npm run lint'
+        language: system
+        types: [javascript]
+        files: ^tax-filer-frontend/
+        pass_filenames: false
+
+      - id: frontend-format
+        name: Format frontend JS/TS with Prettier
+        entry: bash -c 'cd tax-filer-frontend && npm run format:check'
+        language: system
+        types: [javascript]
+        files: ^tax-filer-frontend/
+        pass_filenames: false
