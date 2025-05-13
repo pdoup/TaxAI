@@ -1,8 +1,10 @@
-from fastapi import APIRouter, HTTPException, Body
-from app.models import TaxInfoInput, TaxAdviceResponse, AppInfo
-from app.services.ai_service import get_tax_advice_from_ai
-from app.core.config import Settings, settings as app_settings
+from fastapi import APIRouter, Body, HTTPException
+
+from app.core.config import Settings
+from app.core.config import settings as app_settings
 from app.core.logging_config import app_logger
+from app.models import AppInfo, TaxAdviceResponse, TaxInfoInput
+from app.services.ai_service import get_tax_advice_from_ai
 
 router = APIRouter()
 

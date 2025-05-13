@@ -29,7 +29,7 @@ repos:
         language: system
         types: [javascript]
         files: ^tax-filer-frontend/
-        pass_filenames: false
+        pass_filenames: true
 
       - id: frontend-format
         name: Format frontend JS/TS with Prettier
@@ -37,4 +37,4 @@ repos:
         language: system
         types: [javascript]
         files: ^tax-filer-frontend/
-        pass_filenames: false
+        pass_filenames: true

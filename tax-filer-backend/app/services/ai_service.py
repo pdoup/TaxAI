@@ -1,14 +1,15 @@
 from openai import (
-    AsyncOpenAI,
-    OpenAIError,
     APIConnectionError,
     APIStatusError,
-    RateLimitError,
+    AsyncOpenAI,
     NotFoundError,
+    OpenAIError,
+    RateLimitError,
 )
+
 from app.core.config import settings
-from app.models import TaxInfoInput
 from app.core.logging_config import app_logger
+from app.models import TaxInfoInput
 
 # Ensure OpenAI client is initialized safely
 try:

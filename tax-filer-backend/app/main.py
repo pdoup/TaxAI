@@ -1,12 +1,14 @@
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI, Request, status
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from fastapi.exceptions import RequestValidationError
-from app.routers import tax_info
+
 from app.core.config import settings
 from app.core.logging_config import app_logger
 from app.middleware.request_id_middleware import RequestIDMiddleware
-from contextlib import asynccontextmanager
+from app.routers import tax_info
 
 if settings.LOG_LEVEL:
     app_logger.setLevel(settings.LOG_LEVEL.upper())

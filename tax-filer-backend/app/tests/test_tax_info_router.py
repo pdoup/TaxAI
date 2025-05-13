@@ -1,9 +1,10 @@
-import pytest
 from fastapi import status
-from app.main import app  # Main FastAPI application instance
-from app.core.config import settings
-from httpx import AsyncClient, ASGITransport
+from httpx import ASGITransport, AsyncClient
+import pytest
 import pytest_asyncio
+
+from app.core.config import settings
+from app.main import app  # Main FastAPI application instance
 
 
 @pytest_asyncio.fixture(scope="module")

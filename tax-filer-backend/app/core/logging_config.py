@@ -2,6 +2,7 @@
 import logging
 import logging.handlers
 from pathlib import Path
+
 from app.middleware.request_id_middleware import get_request_id
 
 # Define the log directory relative to the backend app's root

@@ -1,9 +1,11 @@
+from contextvars import ContextVar
+
 # tax-filer-backend/app/middleware/request_id_middleware.py
 import uuid
+
 from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
 from starlette.requests import Request
 from starlette.responses import Response
-from contextvars import ContextVar
 
 # ContextVar to hold the request ID
 request_id_var: ContextVar[str | None] = ContextVar("request_id", default=None)
