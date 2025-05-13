@@ -23,7 +23,6 @@ const Modal = ({ isOpen, onClose, title, children, formData }) => {
   const generatePdf = () => {
     const content = document.getElementById('pdf-content-area');
     if (!content) {
-      console.error('PDF content area not found!');
       return;
     }
 
@@ -74,10 +73,8 @@ const Modal = ({ isOpen, onClose, title, children, formData }) => {
         document.body.removeChild(wrapper);
       })
       .catch((err) => {
-        console.error('Error generating PDF:', err);
-        alert(
-          'Sorry, there was an error generating the PDF. Please try again.'
-        );
+        err = 'Sorry, there was an error generating the PDF. Please try again.';
+        alert(err);
       });
   };
 
