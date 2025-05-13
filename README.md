@@ -166,7 +166,7 @@ The application follows a standard three-tier architecture:
 4.  **Build and Run with Docker Compose:**
     From the project root:
     ```bash
-    docker compose up --build --detach --wait --yes
+    docker compose up --build --detach --wait
     ```
 5.  **Access the Application:**
     * Frontend: [http://localhost:3000](http://localhost:3000)
