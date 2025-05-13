@@ -1,6 +1,6 @@
 # Tax Filer Backend (FastAPI)
 
-This is the backend application for the Intelligent Tax Filing Assistant, built with FastAPI.
+Backend application for the Intelligent Tax Filing Assistant, built with FastAPI.
 
 ## Features
 
@@ -52,7 +52,7 @@ The base URL for the API is `/api/v1`.
             "version": "0.1.0",
             "description": "API for the Intelligent Tax Filing Web Application, providing AI-driven tax advice.",
             "default_openai_model": "gpt-4-turbo",
-            "configured_openai_model": "gpt-4-turbo",
+            "configured_openai_model": "gpt-3.5-turbo",
             "api": "/api/v1"
         }
         ```
@@ -73,6 +73,10 @@ ReDoc documentation is available at `/redoc`.
     ```bash
     pip install -r requirements.txt
     ```
+    Optionally, install `requirements-dev.txt` file to run the Pytests inside the `app/tests/` directory:
+    ```bash
+    pip install -r requirements-dev.txt
+    ```
 
 3.  **Configure Environment Variables:**
     Create a `.env` file in the `tax-filer-backend` root directory:
@@ -87,12 +91,13 @@ ReDoc documentation is available at `/redoc`.
     ```bash
     uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
     ```
-    The backend will be accessible at `http://localhost:8000`.
+    Launches the ASGI server in development mode (`--reload`) for local testing/debugging. As is the case with the frontend dev server if any code changes are detected, the server automatically restarts to apply the changes.
+    The backend will be accessible at `http://localhost:8000` (default).
 
 
 ### Request Handling
 
-* Each request is associated with a unique identifier (UUID) which is logged to a file, enabling the admininstrator
+* Each request is associated with a unique identifier (UUIDv4) which is logged to a file, enabling the admininstrator
 more fine grained control over the entire lifecycle of a single request and help with error debugging.
 * A middleware intercepts each request and injects a unique request header `X-Request-ID` (if not already present).
 * This ID is also added to the response headers, so other clients and services can trace it.
@@ -101,7 +106,7 @@ more fine grained control over the entire lifecycle of a single request and help
 
 ## AI Integration Details
 
--   The service in `app/services/ai_service.py` handles communication with the OpenAI API.
+-   The service in `app/services/ai_service.py` handles communication with the OpenAI API (async client).
 -   It constructs a prompt based on the user's input from the `TaxInfoInput` model.
 -   The `gpt-4-turbo` model (configurable) is used to generate tax advice.
 -   The OpenAI API key is securely managed via the `.env` file and `app.core.config.Settings`.
