@@ -1,0 +1,38 @@
+/* tax-filer-frontend/src/components/Footer.css */
+.app-footer {
+  background-color: #f8f9fa;
+  color: #555;
+  padding: 10px 0;
+  text-align: center;
+  font-size: 0.9rem;
+  border-top: 1px solid #e7e7e7;
+  margin-top: auto;
+  width: 100%;
+}
+
+.footer-content {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.footer-content p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.footer-links {
+  margin-top: 8px;
+}
+
+.footer-links a {
+  color: #e0007c;
+  text-decoration: none;
+  margin: 0 8px;
+  transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+  color: #c7006e;
+  text-decoration: underline;
+}

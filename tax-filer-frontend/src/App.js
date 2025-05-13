@@ -4,6 +4,7 @@ import HomePage from './components/HomePage';
 import TaxForm from './components/TaxForm';
 import Navbar from './components/Navbar';
 import NotFoundPage from './components/NotFoundPage';
+import Footer from './components/Footer';
 import './App.css'; // Global styles
 import 'animate.css';
 
@@ -22,6 +23,7 @@ function App() {
             {/* Define more routes? */}
           </Routes>
         </main>
+        <Footer />
       </div>
     </Router>
   );
