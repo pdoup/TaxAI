@@ -77,7 +77,7 @@ The Intelligent Tax Filing Web Application is a full-stack solution designed to 
     * ASGI Server: Uvicorn
     * Testing: Pytest, Pytest-Asyncio, Pytest-Cov, Mocker
     * Logging: Standard Python `logging` module, configured for different levels.
-    * Linting/Formatting: Flake8, Black
+    * Linting/Formatting: Flake8, Black, isort
     * API Endpoints:
         * `POST /api/v1/tax/submit-advice`:
             * Request Body: `{ "income": float, "expenses": Optional[float], "deductions": Optional[float], "country": str (acronym) }`
@@ -280,7 +280,7 @@ Continuous Integration and Continuous Deployment/Delivery are managed using GitH
     * Checks out code.
     * Sets up Python (with caching for `pip` dependencies).
     * Installs dependencies from `requirements.txt`.
-    * Runs Flake8, Black (check mode)
+    * Runs Flake8, Black (check only), isort (check only)
     * Runs Pytest for unit and integration tests.
     * Generates code coverage reports (term-missing and XML).
     * `OPENAI_API_KEY` is made available as an environment variable from GitHub secrets for tests that might require it (though tests use mock).
@@ -325,7 +325,7 @@ Continuous Integration and Continuous Deployment/Delivery are managed using GitH
         * Testing API endpoints (router functions in `tax_info.py`) for correct request handling, response codes, and data validation. `AsyncClient` from `httpx` is used for this.
     * Mocking: The `mocker` fixture (from `pytest-mock`) is used extensively to mock external dependencies like the OpenAI API, ensuring tests are fast, deterministic, and don't incur external API costs.
     * Run via `pytest`.
-* **Linting/Formatting:** Flake8 and Black ensure code quality and consistency, caught by the linter CI job.
+* **Linting/Formatting:** Flake8, Black and isort ensure code quality and consistency, caught by the linter CI job.
 
 ## Key Learnings & Challenges Faced
 
