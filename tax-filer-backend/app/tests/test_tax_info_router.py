@@ -5,6 +5,7 @@ import pytest_asyncio
 
 from app.core.config import settings
 from app.main import app  # Main FastAPI application instance
+from app.models import AIServiceError, AIServiceResponse
 
 
 @pytest_asyncio.fixture(scope="module")
@@ -50,7 +51,9 @@ async def test_submit_tax_info_valid(async_client: AsyncClient, mocker):
     # Mock the AI service to avoid actual OpenAI calls and costs during unit/integration tests
     mocker.patch(
         "app.routers.tax_info.get_tax_advice_from_ai",
-        return_value="Mocked AI advice: Based on your input...",
+        return_value=AIServiceResponse(
+            success=True, content="Mocked AI advice: Based on your input..."
+        ),
         new_callable=mocker.AsyncMock,
     )
 
@@ -89,7 +92,11 @@ async def test_submit_tax_info_invalid_input_negative_income(async_client: Async
 async def test_submit_tax_info_ai_service_failure(async_client: AsyncClient, mocker):
     mocker.patch(
         "app.routers.tax_info.get_tax_advice_from_ai",
-        return_value="Could not retrieve AI-powered advice at this moment due to an API error: Mocked Error.",
+        return_value=AIServiceResponse(
+            success=False,
+            content="Could not retrieve AI-powered advice at this moment due to an API error: Mocked Error.",
+            error_type=AIServiceError.API_ERROR,
+        ),
         new_callable=mocker.AsyncMock,
     )
     test_payload = {
