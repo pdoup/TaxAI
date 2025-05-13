@@ -1,21 +1,31 @@
 // tax-filer-frontend/src/components/TaxForm.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import Cookies from 'js-cookie';
 import { submitTaxDataForAdvice } from '../services/apiService';
 import '../TaxForm.css';
 import Modal from './Modal'; // Import the Modal component
 import { countryList } from '../utils/countries'; // Import the country list
+
+const LAST_COUNTRY_COOKIE = 'lastSelectedCountry';
 
 const TaxForm = () => {
   const [formData, setFormData] = useState({
     income: '',
     expenses: '',
     deductions: '',
-    country: '',
+    country: Cookies.get(LAST_COUNTRY_COOKIE) || '',
   });
   const [advice, setAdvice] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false); // State for modal
+
+  useEffect(() => {
+    // Update on change
+    if (formData.country) {
+      Cookies.set(LAST_COUNTRY_COOKIE, formData.country, { expires: 30 }); // Cookie expires in 30 days
+    }
+  }, [formData.country]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
