@@ -7,6 +7,7 @@ This is the frontend application for the Intelligent Tax Filing Assistant, built
 - Responsive home page with application description.
 - User-friendly form for inputting basic tax information (income, expenses, deductions).
 - Integration with the backend to submit tax data and display AI-generated advice.
+- Client side cookie storage to improve user experience for minor, non-sensitive preferences is stored (`lastSelectedCountry`).
 
 ## Available Scripts
 
