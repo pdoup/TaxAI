@@ -10,18 +10,21 @@
   align-items: center;
   justify-content: center;
   z-index: 1000; /* Ensure it's on top */
+  padding: 20px;
+  box-sizing: border-box;
 }
 
-.modal-content {
+.modal-content-wrapper {
   background-color: #ffffff;
   padding: 25px 30px;
   border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  width: 90%;
-  max-width: 650px; /* Max width of the modal */
-  max-height: 80vh; /* Max height */
-  overflow-y: auto; /* Allow scrolling for long content */
-  position: relative; /* For positioning the close button */
+  width: 95%;
+  max-width: 700px;
+  max-height: 80vh;
+  overflow-y: auto;
+  flex-direction: column;
+  position: relative;
 }
 
 .modal-header {
@@ -30,29 +33,64 @@
   align-items: center;
   border-bottom: 1px solid #eee;
   padding-bottom: 15px;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
 .modal-header h2 {
   margin: 0;
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   color: #e0007c; /* Magenta */
+  font-weight: 600;
 }
 
 .modal-close-button {
   background: none;
   border: none;
-  font-size: 2.5rem;
+  font-size: 2.2rem;
   font-weight: 300;
   color: #aaa;
   cursor: pointer;
   line-height: 1;
-  padding: 0;
+  padding: 0 5px;
   transition: color 0.2s ease;
 }
 
 .modal-close-button:hover {
   color: #333;
+}
+
+#pdf-content-area.modal-body {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #343a40;
+  overflow-y: auto;
+  flex-grow: 1;
+  padding-right: 10px;
+  margin-bottom: 15px;
+}
+
+#pdf-content-area h3 {
+  font-size: 1.4em;
+  color: #333;
+  text-align: center;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+}
+#pdf-content-area .report-date {
+  font-size: 0.85em;
+  color: #777;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+#pdf-content-area h4 {
+  font-size: 1.15em;
+  color: #e0007c; /* Magenta */
+  margin-top: 20px;
+  margin-bottom: 8px;
+  border-bottom: 1px dashed #f0c2dd;
+  padding-bottom: 5px;
 }
 
 .modal-body {
@@ -131,4 +169,85 @@
 .modal-body th {
   background-color: #f9f9f9;
   font-weight: bold;
+}
+
+/* Markdown styling within #pdf-content-area */
+#pdf-content-area .ReactMarkdown p {
+  margin-bottom: 0.8em;
+}
+#pdf-content-area .ReactMarkdown ul,
+#pdf-content-area .ReactMarkdown ol {
+  margin-left: 20px;
+  margin-bottom: 0.8em;
+}
+#pdf-content-area .ReactMarkdown li {
+  margin-bottom: 0.4em;
+}
+#pdf-content-area .ReactMarkdown h1,
+#pdf-content-area .ReactMarkdown h2,
+#pdf-content-area .ReactMarkdown h3,
+#pdf-content-area .ReactMarkdown h4 {
+  color: #333;
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+}
+#pdf-content-area .ReactMarkdown code {
+  background-color: #eef0f2;
+  padding: 0.2em 0.5em;
+  border-radius: 4px;
+  font-size: 0.85em;
+  color: #383a3c;
+}
+#pdf-content-area .ReactMarkdown pre {
+  background-color: #eef0f2;
+  padding: 0.8em;
+  border-radius: 6px;
+  overflow-x: auto;
+  border: 1px solid #d1d5da;
+}
+#pdf-content-area .ReactMarkdown blockquote {
+  border-left: 4px solid #d1d5da;
+  padding-left: 1em;
+  margin-left: 0;
+  color: #586069;
+  font-style: italic;
+}
+
+.modal-footer {
+  border-top: 1px solid #eee;
+  padding-top: 15px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.modal-action-button,
+.pdf-download-button {
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
+  border: none;
+}
+
+.modal-action-button {
+  background-color: #6c757d;
+  color: white;
+}
+.modal-action-button:hover {
+  background-color: #5a6268;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.pdf-download-button {
+  background-color: #e0007c; /* Magenta */
+  color: white;
+}
+.pdf-download-button:hover {
+  background-color: #c7006e; /* Darker magenta */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }

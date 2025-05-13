@@ -15,6 +15,7 @@ const TaxForm = () => {
     deductions: '',
     country: Cookies.get(LAST_COUNTRY_COOKIE) || '',
   });
+  const [submittedFormData, setSubmittedFormData] = useState(null);
   const [advice, setAdvice] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -41,6 +42,7 @@ const TaxForm = () => {
     setAdvice('');
     setIsLoading(true);
     setIsModalOpen(false); // Close modal before new submission
+    setSubmittedFormData(null);
 
     try {
       // Basic client-side validation
@@ -55,10 +57,18 @@ const TaxForm = () => {
         setIsLoading(false);
         return;
       }
+      const currentSubmissionData = { ...formData };
+      const selectedCountryObject = countryList.find(
+        (c) => c.code === formData.country
+      );
+      currentSubmissionData.countryFullName = selectedCountryObject
+        ? selectedCountryObject.name
+        : formData.country;
 
       const response = await submitTaxDataForAdvice(formData);
       if (response && response.advice) {
         setAdvice(response.advice); // This will be passed to the modal
+        setSubmittedFormData(currentSubmissionData);
         setIsModalOpen(true); // Open the modal on success
       } else {
         setError(response.error || 'Failed to get advice. Please try again.');
@@ -86,6 +96,7 @@ const TaxForm = () => {
   const closeModal = () => {
     setIsModalOpen(false);
     setAdvice('');
+    setSubmittedFormData(null);
   };
 
   return (
@@ -181,6 +192,7 @@ const TaxForm = () => {
         isOpen={isModalOpen}
         onClose={closeModal}
         title="AI Tax Considerations"
+        formData={submittedFormData}
       >
         {advice}
       </Modal>
