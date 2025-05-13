@@ -41,6 +41,9 @@ jobs:
       - name: Check formatting with Black
         run: black app --check --diff
 
+      - name: Check imports with isort
+        run: isort app --check-only --diff
+
       - name: Run Pytest
         env: # Environment variables for tests
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY_TESTING }}

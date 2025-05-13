@@ -13,6 +13,14 @@ repos:
         files: ^tax-filer-backend/
         args: ["--config=tax-filer-backend/.flake8"]
 
+  - repo: https://github.com/PyCQA/isort
+    rev: 6.0.1
+    hooks:
+      - id: isort
+        language_version: python3
+        files: ^tax-filer-backend/
+        args: ["--settings-path=tax-filer-backend/"]
+
   - repo: local
     hooks:
       - id: frontend-lint
