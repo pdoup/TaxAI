@@ -1,8 +1,8 @@
-# For linting & formatting
+# Linting & formatting
 flake8
 black
 
-# For testing
+# Testing
 pytest
 pytest-cov
 pytest-mock
