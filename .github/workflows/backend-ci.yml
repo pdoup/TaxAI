@@ -42,7 +42,7 @@ jobs:
         run: black app --check --diff
 
       - name: Check imports with isort
-        run: isort app --check-only --diff
+        run: isort app --check-only --diff --verbose
 
       - name: Run Pytest
         env: # Environment variables for tests
