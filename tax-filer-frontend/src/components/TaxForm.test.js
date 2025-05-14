@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import TaxForm from './TaxForm';
 import { submitTaxDataForAdvice } from '../services/apiService';
@@ -44,24 +44,126 @@ describe('TaxForm Component', () => {
     });
     expect(screen.getByLabelText(/annual income/i).value).toBe('60000');
 
+    fireEvent.change(screen.getByLabelText(/total business\/work expenses/i), {
+      target: { value: '10000' },
+    });
+    expect(screen.getByLabelText(/total business\/work expenses/i).value).toBe(
+      '10000'
+    );
+
     fireEvent.change(screen.getByLabelText(/country of residence/i), {
       target: { value: 'US' },
     });
     expect(screen.getByLabelText(/country of residence/i).value).toBe('US');
   });
 
-  test('shows an error message if required fields (income, country) are missing on submit', async () => {
+  test('shows error messages for missing or invalid fields on submit', async () => {
     render(<TaxForm />);
-    const submitButton = screen.getByRole('button', {
-      name: /get ai tax advice/i,
-    });
-    fireEvent.click(submitButton);
 
-    // Wait for error message to appear
+    const countrySelect = screen.getByLabelText(/country of residence/i);
+    fireEvent.change(countrySelect, { target: { value: '' } });
+    expect(countrySelect).toHaveValue('');
+
+    fireEvent.click(screen.getByRole('button', { name: /get ai tax advice/i }));
+
     expect(
-      await screen.findByText(/please fill in all fields correctly/i)
+      await screen.findByText(/income must be a non-negative number/i)
     ).toBeVisible();
+    expect(
+      await screen.findByText(/expenses must be a non-negative number/i)
+    ).toBeVisible();
+    expect(await screen.findByText(/country is required/i)).toBeVisible();
     expect(submitTaxDataForAdvice).not.toHaveBeenCalled();
+  });
+
+  test('shows error if income is negative', async () => {
+    render(<TaxForm />);
+
+    fireEvent.change(screen.getByLabelText(/annual income/i), {
+      target: { value: '-100' },
+    });
+
+    fireEvent.change(screen.getByLabelText(/total business\/work expenses/i), {
+      target: { value: '100' },
+    });
+
+    fireEvent.change(screen.getByLabelText(/country of residence/i), {
+      target: { value: 'US' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: /get ai tax advice/i }));
+
+    expect(
+      await screen.findByText(/income must be a non-negative number/i)
+    ).toBeVisible();
+  });
+
+  test('shows error if expenses is negative', async () => {
+    render(<TaxForm />);
+
+    fireEvent.change(screen.getByLabelText(/annual income/i), {
+      target: { value: '50000' },
+    });
+    fireEvent.change(screen.getByLabelText(/country of residence/i), {
+      target: { value: 'US' },
+    });
+    fireEvent.change(screen.getByLabelText(/total business\/work expenses/i), {
+      target: { value: '-500' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: /get ai tax advice/i }));
+
+    expect(
+      await screen.findByText(/expenses must be a non-negative number/i)
+    ).toBeVisible();
+  });
+
+  test('shows error if deductions is negative', async () => {
+    render(<TaxForm />);
+
+    fireEvent.change(screen.getByLabelText(/annual income/i), {
+      target: { value: '50000' },
+    });
+    fireEvent.change(screen.getByLabelText(/total business\/work expenses/i), {
+      target: { value: '5000' },
+    });
+    fireEvent.change(screen.getByLabelText(/country of residence/i), {
+      target: { value: 'US' },
+    });
+    fireEvent.change(screen.getByLabelText(/other deductions claimed/i), {
+      target: { value: '-200' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: /get ai tax advice/i }));
+
+    expect(
+      await screen.findByText(/deductions cannot be negative/i)
+    ).toBeVisible();
+  });
+
+  test('defaults deductions to 0 if empty and submits form correctly', async () => {
+    const mockAdvice = 'Mock advice';
+    submitTaxDataForAdvice.mockResolvedValueOnce({ advice: mockAdvice });
+
+    render(<TaxForm />);
+    fireEvent.change(screen.getByLabelText(/annual income/i), {
+      target: { value: '75000' },
+    });
+    fireEvent.change(screen.getByLabelText(/total business\/work expenses/i), {
+      target: { value: '10500' },
+    });
+    fireEvent.change(screen.getByLabelText(/country of residence/i), {
+      target: { value: 'US' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: /get ai tax advice/i }));
+
+    await waitFor(() => {
+      expect(screen.getByText(mockAdvice)).toBeVisible();
+    });
+
+    expect(submitTaxDataForAdvice).toHaveBeenCalledWith({
+      income: '75000',
+      expenses: '10500',
+      deductions: '0',
+      country: 'US',
+    });
   });
 
   test('submits form data and displays advice in a modal on successful API call', async () => {
@@ -72,6 +174,9 @@ describe('TaxForm Component', () => {
 
     fireEvent.change(screen.getByLabelText(/annual income/i), {
       target: { value: '75000' },
+    });
+    fireEvent.change(screen.getByLabelText(/total business\/work expenses/i), {
+      target: { value: '10500' },
     });
     fireEvent.change(screen.getByLabelText(/country of residence/i), {
       target: { value: 'US' },
@@ -93,8 +198,8 @@ describe('TaxForm Component', () => {
     expect(screen.getByText(mockAdvice)).toBeVisible();
     expect(submitTaxDataForAdvice).toHaveBeenCalledWith({
       income: '75000',
-      expenses: '',
-      deductions: '',
+      expenses: '10500',
+      deductions: '0',
       country: 'US',
     });
   });
@@ -107,6 +212,9 @@ describe('TaxForm Component', () => {
     render(<TaxForm />);
     fireEvent.change(screen.getByLabelText(/annual income/i), {
       target: { value: '50000' },
+    });
+    fireEvent.change(screen.getByLabelText(/total business\/work expenses/i), {
+      target: { value: '10500' },
     });
     fireEvent.change(screen.getByLabelText(/country of residence/i), {
       target: { value: 'CA' },

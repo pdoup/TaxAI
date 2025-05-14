@@ -17,7 +17,13 @@ const TaxForm = () => {
   });
   const [submittedFormData, setSubmittedFormData] = useState(null);
   const [advice, setAdvice] = useState('');
-  const [error, setError] = useState('');
+  const [errors, setErrors] = useState({
+    income: '',
+    expenses: '',
+    deductions: '',
+    country: '',
+    general: '',
+  });
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false); // State for modal
 
@@ -34,60 +40,96 @@ const TaxForm = () => {
       ...prevData,
       [name]: name === 'country' ? value : value, // Store the country code directly
     }));
+    setErrors((prev) => ({ ...prev, [name]: '', general: '' }));
+  };
+
+  const validateForm = () => {
+    const newErrors = {
+      income: '',
+      expenses: '',
+      deductions: '',
+      country: '',
+      general: '',
+    };
+    let isValid = true;
+
+    if (!formData.country || formData.country === '') {
+      newErrors.country = 'Country is required.';
+      isValid = false;
+    }
+
+    if (formData.income === '' || parseFloat(formData.income) < 0) {
+      newErrors.income = 'Income must be a non-negative number.';
+      isValid = false;
+    }
+
+    if (formData.expenses === '' || parseFloat(formData.expenses) < 0) {
+      newErrors.expenses = 'Expenses must be a non-negative number.';
+      isValid = false;
+    }
+
+    if (formData.deductions !== '' && parseFloat(formData.deductions) < 0) {
+      newErrors.deductions = 'Deductions cannot be negative.';
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return isValid;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
     setAdvice('');
-    setIsLoading(true);
     setIsModalOpen(false); // Close modal before new submission
     setSubmittedFormData(null);
 
+    const isValid = validateForm();
+    if (!isValid) return;
+
+    const cleanedData = {
+      ...formData,
+      deductions: formData.deductions === '' ? '0' : formData.deductions,
+    };
+
+    setIsLoading(true);
     try {
-      // Basic client-side validation
-      if (
-        !formData.country ||
-        formData.income === '' ||
-        parseFloat(formData.income) < 0
-      ) {
-        setError(
-          'Please fill in all fields correctly. Income must be a non-negative number.'
-        );
-        setIsLoading(false);
-        return;
-      }
-      const currentSubmissionData = { ...formData };
       const selectedCountryObject = countryList.find(
         (c) => c.code === formData.country
       );
-      currentSubmissionData.countryFullName = selectedCountryObject
-        ? selectedCountryObject.name
-        : formData.country;
+      const currentSubmissionData = {
+        ...cleanedData,
+        countryFullName: selectedCountryObject
+          ? selectedCountryObject.name
+          : formData.country,
+      };
 
-      const response = await submitTaxDataForAdvice(formData);
+      const response = await submitTaxDataForAdvice(cleanedData);
       if (response && response.advice) {
         setAdvice(response.advice); // This will be passed to the modal
         setSubmittedFormData(currentSubmissionData);
         setIsModalOpen(true); // Open the modal on success
       } else {
-        setError(response.error || 'Failed to get advice. Please try again.');
+        setErrors((prev) => ({
+          ...prev,
+          general: response.error || 'Failed to get advice.',
+        }));
       }
     } catch (err) {
       let errorMessage =
         'An unexpected error occurred. Please try again later.';
-      if (err.response && err.response.data && err.response.data.detail) {
-        if (Array.isArray(err.response.data.detail)) {
-          errorMessage = err.response.data.detail
-            .map((d) => `${d.loc[1]}: ${d.msg}`)
-            .join('; ');
-        } else if (typeof err.response.data.detail === 'string') {
-          errorMessage = err.response.data.detail;
-        }
+      if (err.response?.data?.detail) {
+        errorMessage =
+          typeof err.response.data.detail === 'string'
+            ? err.response.data.detail
+            : Array.isArray(err.response.data.detail)
+              ? err.response.data.detail
+                  .map((d) => `${d.loc[1]}: ${d.msg}`)
+                  .join('; ')
+              : errorMessage;
       } else if (err.message) {
         errorMessage = err.message;
       }
-      setError(errorMessage);
+      setErrors((prev) => ({ ...prev, general: errorMessage }));
     } finally {
       setIsLoading(false);
     }
@@ -102,7 +144,7 @@ const TaxForm = () => {
   return (
     <div className="tax-form-container animate__animated animate__fadeIn">
       <h2>Get Your AI Tax Insight</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} noValidate>
         {/* Form Groups */}
         <div className="form-group">
           <label htmlFor="income">Annual Income:</label>
@@ -113,10 +155,11 @@ const TaxForm = () => {
             value={formData.income}
             onChange={handleChange}
             placeholder="e.g., 50000"
+            step="1000"
             min="0"
-            step="any"
             required
           />
+          {errors.income && <p className="error-message">{errors.income}</p>}
         </div>
         <div className="form-group">
           <label htmlFor="expenses">
@@ -129,9 +172,13 @@ const TaxForm = () => {
             value={formData.expenses}
             onChange={handleChange}
             placeholder="e.g., 10000"
+            step="100"
             min="0"
-            step="any"
+            required
           />
+          {errors.expenses && (
+            <p className="error-message">{errors.expenses}</p>
+          )}
         </div>
         <div className="form-group">
           <label htmlFor="deductions">Other Deductions Claimed:</label>
@@ -142,9 +189,12 @@ const TaxForm = () => {
             value={formData.deductions}
             onChange={handleChange}
             placeholder="e.g., 2000"
-            min="0"
             step="any"
+            min="0"
           />
+          {errors.deductions && (
+            <p className="error-message">{errors.deductions}</p>
+          )}
         </div>
         <div className="form-group">
           <label htmlFor="country">Country of Residence:</label>
@@ -166,6 +216,7 @@ const TaxForm = () => {
                 </option>
               ))}
           </select>
+          {errors.country && <p className="error-message">{errors.country}</p>}
         </div>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           <button type="submit" disabled={isLoading}>
@@ -181,9 +232,9 @@ const TaxForm = () => {
         </div>
       </form>
 
-      {error && (
+      {errors.general && (
         <p className="error-message animate__animated animate__shakeX">
-          {error}
+          {errors.general}
         </p>
       )}
 
