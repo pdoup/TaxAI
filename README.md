@@ -3,7 +3,7 @@
 
 **Version:** 1.0.0
 
-**Last Updated:** 11/05/25
+**Last Updated:** 14/05/25
 
 [![Backend CI](https://github.com/pdoup/TaxAI/actions/workflows/backend-ci.yml/badge.svg)](https://github.com/pdoup/TaxAI/actions/workflows/backend-ci.yml)
 [![Frontend CI](https://github.com/pdoup/TaxAI/actions/workflows/frontend-ci.yml/badge.svg)](https://github.com/pdoup/TaxAI/actions/workflows/frontend-ci.yml)
