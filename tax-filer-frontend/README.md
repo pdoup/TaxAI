@@ -15,7 +15,7 @@ In the project directory, you can run:
 
 ### `npm start`
 
-Starts Webpack Dev Server under the hood, any changes to the source code will trigger a reload (default).
+Starts Webpack Dev Server under the hood - any changes to the source code will trigger a reload (default).
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
 ### `npm test`
