@@ -118,14 +118,13 @@ const TaxForm = () => {
       let errorMessage =
         'An unexpected error occurred. Please try again later.';
       if (err.response?.data?.detail) {
-        errorMessage =
-          typeof err.response.data.detail === 'string'
-            ? err.response.data.detail
-            : Array.isArray(err.response.data.detail)
-              ? err.response.data.detail
-                  .map((d) => `${d.loc[1]}: ${d.msg}`)
-                  .join('; ')
-              : errorMessage;
+        if (typeof err.response.data.detail === 'string') {
+          errorMessage = err.response.data.detail;
+        } else if (Array.isArray(err.response.data.detail)) {
+          errorMessage = err.response.data.detail
+            .map((d) => `${d.loc[1]}: ${d.msg}`)
+            .join('; ');
+        }
       } else if (err.message) {
         errorMessage = err.message;
       }
