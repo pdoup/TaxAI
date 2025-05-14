@@ -11,6 +11,25 @@ from app.core.config import settings
 from app.core.logging_config import app_logger
 from app.models import AIServiceError, AIServiceResponse, TaxInfoInput
 
+
+def build_tax_prompt(tax_data: TaxInfoInput) -> str:
+    return f"""
+    You are a helpful AI Tax Assistant providing general tax information.
+    This advice is for informational and educational purposes only and NOT a substitute for professional tax advice.
+    Do not ask follow-up questions, provide a concise summary based on the input.
+
+    User's Tax Information:
+    - Country for Tax Purposes: {tax_data.country}
+    - Annual Income: {tax_data.income:,.2f}
+    - Work-Related/Business Expenses: {tax_data.expenses:,.2f}
+    - Other Claimed Deductions: {tax_data.deductions:,.2f}
+
+    Based on this information for {tax_data.country}, provide some general tax considerations, potential deductions they might explore further,
+    or common tax obligations they should be aware of. Keep the advice general and high-level.
+    Mention that tax laws vary greatly and change, so consulting a local tax professional is crucial.
+    """
+
+
 # Ensure OpenAI client is initialized safely
 try:
     if not settings.OPENAI_API_KEY:
@@ -27,21 +46,8 @@ async def get_tax_advice_from_ai(tax_data: TaxInfoInput) -> AIServiceResponse:
     """
     Sends user tax input to OpenAI (GPT model) and retrieves tax advice.
     """
-    prompt = f"""
-    You are a helpful AI Tax Assistant providing general tax information.
-    This advice is for informational and educational purposes only and NOT a substitute for professional tax advice.
-    Do not ask follow-up questions, provide a concise summary based on the input.
+    prompt = build_tax_prompt(tax_data)
 
-    User's Tax Information:
-    - Country for Tax Purposes: {tax_data.country}
-    - Annual Income: {tax_data.income:,.2f}
-    - Work-Related/Business Expenses: {tax_data.expenses:,.2f}
-    - Other Claimed Deductions: {tax_data.deductions:,.2f}
-
-    Based on this information for {tax_data.country}, provide some general tax considerations, potential deductions they might explore further,
-    or common tax obligations they should be aware of. Keep the advice general and high-level.
-    Mention that tax laws vary greatly and change, so consulting a local tax professional is crucial.
-    """
     if not client:
         app_logger.error("OpenAI client not initialized. Cannot fetch AI advice.")
         return AIServiceResponse(
