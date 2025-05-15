@@ -5,3 +5,5 @@ pydantic-settings
 python-dotenv
 openai>1
 httpx
+python-jose
+passlib[bcrypt]

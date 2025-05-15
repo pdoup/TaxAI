@@ -117,6 +117,13 @@ const TaxForm = () => {
     } catch (err) {
       let errorMessage =
         'An unexpected error occurred. Please try again later.';
+      if (
+        err &&
+        (err.isTokenError || err.status === 401 || err.status === 403)
+      ) {
+        errorMessage =
+          'Your session has expired or is invalid. Please try submitting again in a moment.';
+      }
       if (err.response?.data?.detail) {
         if (typeof err.response.data.detail === 'string') {
           errorMessage = err.response.data.detail;

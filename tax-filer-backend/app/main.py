@@ -8,7 +8,7 @@ from fastapi.responses import JSONResponse
 from app.core.config import settings
 from app.core.logging_config import app_logger
 from app.middleware.request_id_middleware import RequestIDMiddleware
-from app.routers import tax_info
+from app.routers import tax_info, token_router
 
 if settings.LOG_LEVEL:
     app_logger.setLevel(settings.LOG_LEVEL.upper())
@@ -74,6 +74,9 @@ app.add_middleware(
 # Include routers
 app.include_router(
     tax_info.router, prefix=f"{settings.API_V1_STR}/tax", tags=["Tax AI Services"]
+)
+app.include_router(
+    token_router.router, prefix=f"{settings.API_V1_STR}/token", tags=["JWT"]
 )
 
 

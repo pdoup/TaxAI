@@ -26,6 +26,7 @@ jobs:
         run: |
           echo "Creating .env file for Docker Compose..."
           echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY_TESTING }}" > tax-filer-backend/.env
+          echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY_TESTING }}" > tax-filer-backend/.env
           echo "OPENAI_MODEL_NAME=${{ vars.OPENAI_MODEL_NAME || 'gpt-4-turbo' }}" >> tax-filer-backend/.env
           echo ".env file created"
           echo $PWD
@@ -33,6 +34,7 @@ jobs:
           # OPENAI_API_KEY is a secret
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY_TESTING }}
           OPENAI_MODEL_NAME: ${{ vars.OPENAI_MODEL_NAME }}
+          JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY_TESTING }}
 
       - name: Build services with Docker Compose
         run: docker compose build --no-cache
@@ -43,10 +45,24 @@ jobs:
       - name: Wait for services to be healthy
         run: |
           echo "Waiting for services to start..."
-          sleep 15
+          sleep 45
 
           echo "Checking running containers:"
           docker compose ps
+
+          # 1. Request a token (unauthenticated endpoint)
+          echo "Attempting to request a JWT token..."
+          TOKEN_RESPONSE=$(curl -s -X GET http://localhost:8000/api/v1/token/request-token)
+
+          echo "Token Response: $TOKEN_RESPONSE"
+          ACCESS_TOKEN=$(echo $TOKEN_RESPONSE | jq -r .access_token)
+
+          if [ "$ACCESS_TOKEN" = "null" ] || [ -z "$ACCESS_TOKEN" ]; then
+            echo "Failed to retrieve access token!"
+            docker-compose logs
+            exit 1
+          fi
+          echo "Successfully retrieved access token."
 
           # --- Health Checks ---
           echo "Pinging backend..."

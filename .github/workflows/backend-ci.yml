@@ -48,6 +48,7 @@ jobs:
         env: # Environment variables for tests
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY_TESTING }}
           OPENAI_MODEL_NAME: ${{ vars.OPENAI_MODEL_NAME_TESTING || 'gpt-4-turbo' }} # Use variable, fallback
+          JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY_TESTING }}
         run: |
           pytest app/tests -v --cov=app --cov-report=xml --cov-report=term-missing
           # -v for verbose output

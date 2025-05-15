@@ -50,3 +50,8 @@ class AIServiceResponse(BaseModel):
     success: bool
     content: str
     error_type: Optional[AIServiceError] = None
+
+
+class TokenResponse(BaseModel):
+    access_token: str
+    token_type: str = "bearer"

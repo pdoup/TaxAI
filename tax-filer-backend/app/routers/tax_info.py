@@ -1,10 +1,18 @@
-from fastapi import APIRouter, Body, HTTPException
+from typing import Any, Dict
+
+from fastapi import APIRouter, Body, Depends, HTTPException
 
 from app.core.config import Settings
 from app.core.config import settings as app_settings
 from app.core.logging_config import app_logger
-from app.models import AIServiceResponse, AppInfo, TaxAdviceResponse, TaxInfoInput
+from app.models import (
+    AIServiceResponse,
+    AppInfo,
+    TaxAdviceResponse,
+    TaxInfoInput,
+)
 from app.services.ai_service import get_tax_advice_from_ai
+from app.utils.auth_utils import get_current_session_payload
 
 router = APIRouter()
 
@@ -20,6 +28,7 @@ def get_settings() -> Settings:
 )
 async def submit_tax_info_and_get_advice(
     tax_input: TaxInfoInput = Body(...),
+    jwt_payload: Dict[str, Any] = Depends(get_current_session_payload),
 ):
     """
     Receives user's tax information, processes it (e.g., validation),
@@ -30,9 +39,10 @@ async def submit_tax_info_and_get_advice(
     - **deductions**: User's other claimed deductions (optional, >= 0).
     - **country**: User's country of residence for tax purposes.
     """
-    # Pydantic performs initial validation based on model definitions.
+    session_jti = jwt_payload.get("jti", "unknown_jti")
     app_logger.info(
-        f"Received tax info submission for country: {tax_input.country} - income: {tax_input.income}"
+        f"Access granted for JWT (jti: {session_jti}). "
+        f"Processing tax advice request for country: {tax_input.country}"
     )
     try:
         ai_advice: AIServiceResponse = await get_tax_advice_from_ai(tax_input)
