@@ -11,7 +11,7 @@ dotenv_main_path = os.path.join(
 )
 if os.path.exists(dotenv_main_path):
     load_dotenv(dotenv_path=dotenv_main_path, override=True)
-else:  # Fallback if script is run from a different context or for Pydantic to find it
+else:
     app_logger.info(".env file not present, reading secrets from environment")
     load_dotenv(override=True)
 
