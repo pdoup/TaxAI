@@ -26,7 +26,7 @@ jobs:
         run: |
           echo "Creating .env file for Docker Compose..."
           echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY_TESTING }}" > tax-filer-backend/.env
-          echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY_TESTING }}" > tax-filer-backend/.env
+          echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY_TESTING }}" >> tax-filer-backend/.env
           echo "OPENAI_MODEL_NAME=${{ vars.OPENAI_MODEL_NAME || 'gpt-4-turbo' }}" >> tax-filer-backend/.env
           echo ".env file created"
           echo $PWD
