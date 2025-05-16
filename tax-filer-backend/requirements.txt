@@ -1,3 +1,4 @@
+# Core requirements
 fastapi
 uvicorn[standard]
 pydantic>=2.0.0
