@@ -15,8 +15,6 @@ else:  # Fallback if script is run from a different context or for Pydantic to f
     app_logger.info(".env file not present, reading secrets from environment")
     load_dotenv(override=True)
 
-DEFAULT_JWT_SECRET: str = r"Q6qmtU16phGCtw="
-
 
 class Settings(BaseSettings):
     PROJECT_NAME: str = "Intelligent Tax Filing API"
@@ -30,7 +28,7 @@ class Settings(BaseSettings):
     DEFAULT_OPENAI_MODEL: str = "gpt-4-turbo"
     OPENAI_MODEL_NAME: str = os.getenv("OPENAI_MODEL_NAME", DEFAULT_OPENAI_MODEL)
 
-    JWT_SECRET_KEY: str = os.getenv("JWT_SECRET_KEY", DEFAULT_JWT_SECRET).strip()
+    JWT_SECRET_KEY: str = os.getenv("JWT_SECRET_KEY").strip()
     JWT_ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = int(
         os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", 30)
@@ -53,15 +51,7 @@ class Settings(BaseSettings):
     @classmethod
     def validate_jwt_secret(cls, v: str) -> str:
         if not v or len(v.strip()) == 0:
-            app_logger.warn("Empty JWT secret")
-            raise ValueError("JWT secret is empty.")
-        elif v and v != DEFAULT_JWT_SECRET:
-            app_logger.info("Loaded JWT secret from .env file")
-        elif v and v == DEFAULT_JWT_SECRET:
-            app_logger.warn(
-                "Using default JWT, this could be a security vulnerability."
-            )
-
+            raise ValueError("JWT_SECRET_KEY is empty.")
         return v
 
 
